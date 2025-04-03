@@ -1,4 +1,9 @@
-numpy
-pandas
-python-dotenv
-ipykernel
+anthropic>=0.49.0
+docker>=7.1.0
+instructor[claude]>=1.7.3
+loguru>=0.7.3
+mcp[cli]>=1.3.0
+pydantic>=2.10.6
+python-dotenv>=1.0.1
+rich>=13.9.4
+gradio>=4.19.2

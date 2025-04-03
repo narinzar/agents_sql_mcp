@@ -1,134 +1,136 @@
-# Python Project Template
+# AI SQL Assistant
 
-This is a basic template for Python projects, set up with a virtual environment and dependency management. It works across **Windows**, **Linux**, and **macOS** systems. Use the provided scripts to set up the virtual environment, install dependencies, and manage your project.
+A natural language interface for interacting with SQLite databases, powered by Anthropic's Claude AI.
 
-## Setup Instructions
+## Overview
 
-### 1. Clone the Repository
-First, clone this repository to your local machine:
-```bash
-git clone <repo-url>
-cd <repo-name>
-```
+This application allows users to interact with SQLite databases using natural language. Instead of writing SQL queries manually, users can ask questions or give instructions in plain English, and the AI will generate and execute the appropriate SQL queries, returning formatted results.
 
-### 2. Running the Setup
+## Features
 
-The repository includes a cross-platform script (`setup.ps1` for PowerShell) that automates the process of setting up your virtual environment, upgrading `pip`, and installing dependencies.
+- **Natural Language Queries**: Ask questions about your data in plain English
+- **SQL Query Generation**: Automatically generates SQL queries based on user input
+- **Query Execution**: Executes the generated queries against a connected SQLite database
+- **Result Formatting**: Displays query results in a readable format
+- **Error Handling**: Provides clear explanations when queries fail
+- **Example Queries**: Includes sample queries to help users get started
 
-#### For Windows (PowerShell)
-- Run the following command in PowerShell:
-  ```powershell
-  .\venv_setup_and_activate.ps1
-  ```
+## Architecture
 
-#### For Linux/macOS (Bash)
-- Run the following command in your terminal:
-  ```bash
-  ./venv_setup_and_activate.sh
-  ```
+The application consists of three main components:
 
-The script will automatically check your OS and run the appropriate commands for setting up the environment.
+1. **Web Interface** (`app.py`): A Gradio web interface that allows users to interact with the AI
+2. **MCP Server** (`mcp_server.py`): A server that handles SQL query execution
+3. **MCP Client** (`mcp_client.py`): A client that facilitates communication between the web interface and the MCP server
 
----
+## Prerequisites
 
-## Virtual Environment
+- Python 3.8+
+- An Anthropic API key (to access Claude)
 
-If you want to **manually create** or **recreate** the virtual environment, you can do so with the following steps:
+## Installation
 
-### Create a New Virtual Environment
-1. Run this command to create a new virtual environment:
-   ```bash
-   python -m venv venv
+1. Clone this repository:
+   ```
+   git clone https://github.com/yourusername/ai-sql-assistant.git
+   cd ai-sql-assistant
    ```
 
-### Create Virtual Environment from Other Python Versions
-If you want to use a specific version of Python that is not the default on your system (e.g., Python 3.11), follow these steps:
-
-1. **Download and install the version of Python** you want to use (e.g., Python 3.11).
-2. Use the following command to create a virtual environment from that specific Python version:
-   ```bash
-   C:\Users\YOURCOMPUTERUSERNAME\AppData\Local\Programs\Python\Python311\python.exe -m venv venv
+2. Install dependencies:
+   ```
+   pip install -r requirements.txt
    ```
 
-### Activate the Virtual Environment
-- On **Windows (PowerShell)**:
-  ```powershell
-  .\activate_venv.ps1
-  ```
-
-  *Note*: PowerShell automatically activates `venv` during the setup, so manual activation is optional.
-
-- On **Linux/macOS (Bash)**:
-  ```bash
-  source venv/bin/activate
-  ```
-
-### Deactivate the Virtual Environment
-To deactivate the virtual environment, simply run:
-```bash
-deactivate
-```
-
-### Remove and Recreate the Virtual Environment
-If you need to **delete** and **recreate** the virtual environment, follow these steps:
-
-1. Remove the existing `venv` directory:
-   ```bash
-   Remove-Item -Recurse -Force venv  # Windows (PowerShell)
-   rm -rf venv                      # Linux/macOS (Bash)
+3. Create a `.env` file in the project root with your Anthropic API key:
+   ```
+   ANTHROPIC_API_KEY=your_api_key_here
    ```
 
-2. Recreate the virtual environment:
-   ```bash
-   python -m venv venv
+## Usage
+
+1. Start the application:
+   ```
+   python app.py
    ```
 
----
-
-## Managing Dependencies
-
-### Installing Dependencies
-Once the virtual environment is activated, install the dependencies listed in `requirements.txt`:
-```bash
-pip install -r requirements.txt
-```
-
-### Freezing Dependencies
-If you install new packages or update existing ones, remember to update `requirements.txt`:
-```bash
-pip freeze > requirements.txt
-```
-
----
-
-## Git Setup (if not already configured)
-To configure Git for your project:
-
-1. Install [Git](https://git-scm.com/downloads) if you haven't already.
-
-2. Set your global Git configuration:
-   ```bash
-   git config --global user.name "Your GitHub Username"
-   git config --global user.email "Your GitHub Email"
+2. Open your web browser and navigate to:
+   ```
+   http://localhost:7860
    ```
 
-3. Restart the terminal to apply the changes.
+3. Type in a natural language query and press Enter or click Submit.
 
----
+## Sample Queries
 
-## PowerShell Execution Policy (Windows)
-If you're using PowerShell on Windows, you may need to change the execution policy to allow scripts to run:
+Here are some example queries you can try:
 
-```powershell
-Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
-```
+- "List all tables in the database"
+- "Show me all users"
+- "Count how many products cost more than $300"
+- "What's the total value of all products in stock?"
+- "Insert a new product called 'Tablet' with price $499.99 and stock 5"
+- "Update the price of Laptop to $1099.99"
 
-This allows local scripts to run but ensures that downloaded scripts are signed.
+## Sample Database
 
----
+The application creates a sample SQLite database with the following tables:
 
-## Conclusion
+### Users Table
+- `id`: INTEGER (Primary Key)
+- `name`: TEXT
+- `email`: TEXT
+- `created_at`: TIMESTAMP
 
-This template provides a ready-to-go environment for your Python project, ensuring you don't need to repeat the setup process every time. Simply use the provided scripts and enjoy a streamlined development experience!
+### Products Table
+- `id`: INTEGER (Primary Key)
+- `name`: TEXT
+- `price`: REAL
+- `stock`: INTEGER
 
-Feel free to modify the structure or add additional tools as needed for your project.
+## Technical Details
+
+### MCP (Model Completion Protocol)
+
+The application uses MCP to manage communication between Claude and the SQLite database. MCP allows Claude to call functions (tools) and receive results, creating an interactive feedback loop.
+
+### Anthropic Claude
+
+The application uses Anthropic's Claude 3.7 Sonnet model to:
+1. Understand natural language queries
+2. Generate appropriate SQL queries
+3. Explain query results to users
+
+### SQLite
+
+The application uses SQLite for database operations. SQLite is:
+- Lightweight
+- Serverless
+- Self-contained
+- Zero-configuration
+
+## Customization
+
+### Connecting to Your Own Database
+
+To use your own SQLite database instead of the sample one:
+
+1. Replace the database initialization in `app.py` with your own database file path
+2. Update the sample table documentation in the UI to match your schema
+
+### Modifying the System Prompt
+
+The system prompt that guides Claude's behavior can be modified in the `ChatProcessor` class in `app.py`.
+
+## Limitations
+
+- Currently only supports SQLite databases
+- Complex queries might require refinement
+- Limited error recovery for malformed queries
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
